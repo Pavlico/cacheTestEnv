@@ -1,0 +1,6 @@
+{
+    "Username": "admin",
+	"Password": "password123",
+	"Hostname": "db:3306",
+	"DbName":   "userdb"
+}

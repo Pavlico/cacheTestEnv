@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  app:
+    container_name: user_service
+    build:
+      context: ./../
+      dockerfile: ./build/dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+       - ./../:/usr/src/app
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    container_name: mysql
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: userdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+      - /home/deck/Documents/golangtestenv/deployments/db/:/docker-entrypoint-initdb.d
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
+volumes:
+  db: { }
+  cache:
+    driver: local
